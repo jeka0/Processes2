@@ -35,7 +35,7 @@ namespace Proc2
                 Thread.Sleep(1000);
                 leave_region(0);
                 form.SetColor1(Color.Yellow);
-                Thread.Sleep(random.Next(500, 3000));
+                Thread.Sleep(random.Next(1000, 3000));
             }
 
         }
