@@ -8,22 +8,34 @@ using System.Threading;
 
 namespace Proc2
 {
-    public class StrictAlternation
+    public class Peterson_sAlgorithm
     {
         public static Form1 form = Form1.form;
         private static Random random = new Random();
-        static int turn = 0;
+        private static int turn;
+        private static int[] interested = new int[2];
+        private static void enter_region(int process)
+        {
+            int other = 1 - process;
+            interested[process] = 1;
+            turn = process;
+            while (turn == process && interested[other] == 1) if (process == 0) form.SetColor1(Color.Red); else form.SetColor2(Color.Red);
+        }
+        private static void leave_region(int process)
+        {
+            interested[process] = 0;
+        }
         public static void Proc1()
         {
             while (true)
             {
-                while (turn != 0) form.SetColor1(Color.Red);
+                enter_region(0);
                 form.SetColor1(Color.Green);
                 Computing.Factorial();
                 Thread.Sleep(1000);
-                turn = 1;
+                leave_region(0);
                 form.SetColor1(Color.Yellow);
-                Thread.Sleep(random.Next(500,3000));
+                Thread.Sleep(random.Next(500, 3000));
             }
 
         }
@@ -31,14 +43,15 @@ namespace Proc2
         {
             while (true)
             {
-                while (turn != 1) form.SetColor2(Color.Red);
+                enter_region(1);
                 form.SetColor2(Color.Green);
                 Computing.SoundSignal();
-                turn = 0;
+                leave_region(1);
                 form.SetColor2(Color.Yellow);
                 Thread.Sleep(random.Next(500, 3000));
             }
 
         }
+
     }
 }
